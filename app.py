@@ -3,7 +3,7 @@
 Lightweight demo launcher for FollowMyHold.
 
 Usage:
-  python app.py            # Gradio UI (if installed)
+  python app.py            # Gradio UI
   python app.py --cli ...  # CLI mode
 """
 

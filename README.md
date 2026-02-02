@@ -112,7 +112,7 @@ python app.py --config configs/pipeline.env
 CLI mode (no Gradio required):
 
 ```bash
-python app.py --cli --image /path/to/image.png --base-dir /path/to/output_dir
+python app.py --cli --config configs/pipeline.env --image /path/to/image.png --base-dir /path/to/output_dir
 ```
 
 ### Single-step usage
