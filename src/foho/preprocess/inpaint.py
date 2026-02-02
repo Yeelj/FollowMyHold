@@ -43,7 +43,14 @@ def run(save_dir: str, cropped_img_dir: str, gemini_responses: str) -> None:
     )
     pipe.to("cuda")
 
-    sorted_imgs = sorted(os.listdir(cropped_img_dir), key=lambda x: int(x.split("_")[0]))
+    def _sort_key(name: str):
+        head = name.split("_")[0]
+        try:
+            return (0, int(head))
+        except ValueError:
+            return (1, head)
+
+    sorted_imgs = sorted(os.listdir(cropped_img_dir), key=_sort_key)
     for cropped_img_name in tqdm(sorted_imgs):
         index = cropped_img_name.split("_")[0]
         response = obj_name_df.loc[
@@ -63,7 +70,7 @@ def run(save_dir: str, cropped_img_dir: str, gemini_responses: str) -> None:
             continue
 
         input_image = load_image(input_image_path)
-        prompt =  f"Remove hands but keep the {response_text}."
+        prompt =  f"Only remove hands but keep the {response_text}, and preserve the image context."
         negative_prompt = "hands, fingers, arms, person, human, skin, limb"
         image = pipe(
             image=input_image,
@@ -71,7 +78,7 @@ def run(save_dir: str, cropped_img_dir: str, gemini_responses: str) -> None:
             negative_prompt=negative_prompt,
             guidance_scale=2.5,
             num_inference_steps=28,
-            generator=torch.Generator("cuda").manual_seed(2),
+            generator=torch.Generator("cuda").manual_seed(0),
             height=input_image.size[1],
             width=input_image.size[0],
         ).images[0]

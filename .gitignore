@@ -17,3 +17,4 @@ build/
 .ipynb_checkpoints/
 .vscode/
 .DS_Store
+configs/mine.env

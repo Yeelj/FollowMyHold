@@ -102,6 +102,19 @@ export HY3DGEN_MODELS="/path/to/your/ckpt/cache"
 PYTHONPATH=src python3 -m foho.main --config configs/pipeline.env
 ```
 
+### Demo app
+If you install `gradio`, you can launch a demo UI in the conda environment with your config:
+
+```bash
+python app.py --config configs/pipeline.env
+```
+
+CLI mode (no Gradio required):
+
+```bash
+python app.py --cli --image /path/to/image.png --base-dir /path/to/output_dir
+```
+
 ### Single-step usage
 Each module exposes a `run(...)` function, but required flags differ per module. Use `-h/--help` for the full list. Example:
 
