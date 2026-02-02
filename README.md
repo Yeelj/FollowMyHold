@@ -7,7 +7,7 @@ Official implementation of FollowMyHold (3DV 2026).
 ![teaser](assets/teaser.png)
 
 ### 🚀 Updates:
-- **[January 29 2026]** Full code is released!
+- **[January 30 2026]** Full code is released!
 - **[December 4 2025]** Added core model logic files (see `src/`) to make it easier to understand how the method works.
 - **[November 14 2025]** <a href="https://github.com/aidilayce/FollowMyHold/tree/main/test_splits">Test splits</a> are now available.
 - **[November 9 2025]** Got accepted to 3DV 2026!
@@ -154,10 +154,10 @@ If you use this code in your research, please consider citing the paper:
 
 ```bibtex
 @article{aytekin2025follow,
-  title={Follow my hold: Hand-object interaction reconstruction through geometric guidance},
+  title={Follow My Hold: Hand-object Interaction Reconstruction through Geometric Guidance},
   author={Aytekin, Ayce Idil and Rhodin, Helge and Dabral, Rishabh and Theobalt, Christian},
   year={2026},
-  journal={3DV},
+  journal={International Conference on 3D Vision},
 }
 ```
 
