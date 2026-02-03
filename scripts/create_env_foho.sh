@@ -63,7 +63,7 @@ pip install \
   smplx==0.1.28 \
   mmcv==1.3.9 \
   pytorch-lightning==2.6.0 \
-  pyrender timm webdataset pycocotools 
+  pyrender timm webdataset pycocotools gdown gradio
 
 pip install kaolin==0.17.0 -f https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.0_cu124.html
 
