@@ -24,6 +24,7 @@ Official implementation of FollowMyHold (3DV 2026).
   - `alignment/` mesh alignment
   - `guidance/` optimization-in-the-loop guidance step
   - `main.py` entrypoint to the full method
+- `app.py` demo file
 
 ## Installation
 1) Clone the repo:
