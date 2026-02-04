@@ -135,7 +135,7 @@ PYTHONPATH=src python3 -m foho.preprocess.get_hunyuan_input \
 - With different versions of *diffusers* and *transformers* libraries, the inpainting model might perform worse. So, it's strongly recommended to use the library versions given in `scripts/create_env_foho.sh`.
 - Warnings are suppressed by default via `FOHO_SUPPRESS_WARNINGS=1`. To re-enable warnings, run `export FOHO_SUPPRESS_WARNINGS=0` in your shell before running.
 - It is OK to see HaMeR warnings like `unexpected key in source state_dict: backbone.blocks.0.mlp.experts.0.weight`. They are expected and the pipeline should still work.
-- You can set `FOHO_DEBUG_DIR` to enable extra debug outputs from Hy3DGen/Hunyuan3D-2 (e.g., `export FOHO_DEBUG_DIR=/tmp/foho_debug` or add it to your `configs/pipeline.env`).
+- You can set `FOHO_DEBUG_DIR` to enable extra debug outputs from the guidance step (e.g., `export FOHO_DEBUG_DIR=./foho_debug` or add it to your `configs/pipeline.env`). This writes step-by-step guidance artifacts (hand/object updates) for inspection.
 
 ## Troubleshooting
 - Many **“Invalid mesh, aborting step!” warnings in guidance**: Unless the preceding inputs are bad, you should not be seeing many lines of this warning. Please confirm masks are non-empty, `*_hoi_mesh.ply` exists, and HaMeR outputs (`*_kps_for_guidance.npy`, aligned MANO) are present for the same image id. Re-run the preceding steps to ensure those files are generated.
