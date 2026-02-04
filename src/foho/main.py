@@ -21,6 +21,9 @@ def _env_with_paths(cfg: PipelineConfig) -> Dict[str, str]:
         "PYTHONPATH": f"{_foho_src()}:{os.environ.get('PYTHONPATH', '')}",
         "FOHO_PROJECT_ROOT": cfg.project_root,
     }
+    if os.environ.get("FOHO_DETERMINISTIC", "0") == "1":
+        env["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+        env["FOHO_DETERMINISTIC"] = "1"
     if cfg.suppress_warnings:
         warnings.filterwarnings("ignore", category=FutureWarning)
         warnings.filterwarnings("ignore", category=UserWarning)
@@ -34,6 +37,8 @@ def _env_with_paths(cfg: PipelineConfig) -> Dict[str, str]:
         env["HF_TOKEN"] = cfg.hf_token
     if cfg.hy3dgen_models:
         env["HY3DGEN_MODELS"] = cfg.hy3dgen_models
+    if cfg.foho_debug_dir:
+        env["FOHO_DEBUG_DIR"] = cfg.foho_debug_dir
     return env
 
 

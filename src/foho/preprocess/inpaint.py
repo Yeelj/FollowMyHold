@@ -22,12 +22,13 @@ from transformers.utils import logging as transformers_logging
 # diffusers_logging.set_verbosity_error()
 # transformers_logging.set_verbosity_error()
 
-os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
-torch.use_deterministic_algorithms(True)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-torch.backends.cuda.matmul.allow_tf32 = False
-torch.backends.cudnn.allow_tf32 = False
+if os.environ.get("FOHO_DETERMINISTIC", "0") == "1":
+    os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
 
 
 def run(save_dir: str, cropped_img_dir: str, gemini_responses: str) -> None:

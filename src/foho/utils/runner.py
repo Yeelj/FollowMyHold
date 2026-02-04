@@ -14,6 +14,9 @@ def run_in_conda(
     cwd: Optional[str] = None,
     extra_env: Optional[Dict[str, str]] = None,
 ) -> None:
+    if os.environ.get("FOHO_DETERMINISTIC", "0") == "1":
+        os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+        os.environ["FOHO_DETERMINISTIC"] = "1"
     env = os.environ.copy()
     if extra_env:
         env.update(extra_env)

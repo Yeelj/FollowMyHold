@@ -38,6 +38,7 @@ class PipelineConfig:
     gemini_responses: str | None
     run_inpaint: bool
     suppress_warnings: bool
+    foho_debug_dir: str | None
 
 
 _DEF_KEYS = {
@@ -106,6 +107,7 @@ def load_config(path: str) -> PipelineConfig:
 
     run_inpaint = env.get("RUN_INPAINT", "1") == "1"
     suppress_warnings = env.get("FOHO_SUPPRESS_WARNINGS", "1") == "1"
+    foho_debug_dir = env.get("FOHO_DEBUG_DIR") or None
 
     # Back-compat: fall back to older env keys if ENV_NAME is not set.
     env_name = env.get("ENV_NAME") or env.get("ENV_DSINE") or "foho"
@@ -143,4 +145,5 @@ def load_config(path: str) -> PipelineConfig:
         gemini_responses=gemini_responses,
         run_inpaint=run_inpaint,
         suppress_warnings=suppress_warnings,
+        foho_debug_dir=foho_debug_dir,
     )
