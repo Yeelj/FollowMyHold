@@ -138,6 +138,17 @@ PYTHONPATH=src python3 -m foho.preprocess.get_hunyuan_input \
 - It is OK to see HaMeR warnings like `unexpected key in source state_dict: backbone.blocks.0.mlp.experts.0.weight`. They are expected and the pipeline should still work.
 - You can set `FOHO_DEBUG_DIR` to enable extra debug outputs from Hy3DGen/Hunyuan3D-2 (e.g., `export FOHO_DEBUG_DIR=/tmp/foho_debug` or add it to your `configs/pipeline.env`).
 
+## Troubleshooting
+- Many **“Invalid mesh, aborting step!” warnings in guidance**: Unless the preceding inputs are bad, you should not be seeing many lines of this warning. Please confirm masks are non-empty, `*_hoi_mesh.ply` exists, and HaMeR outputs (`*_kps_for_guidance.npy`, aligned MANO) are present for the same image id. Re-run the preceding steps to ensure those files are generated.
+- **Different results on other GPUs with the same seed**: GPU kernels and TF32/BF16 can change guidance behavior. You can force determinism by setting `FOHO_DETERMINISTIC=1` before running:
+  ```bash
+  export FOHO_DETERMINISTIC=1
+  ```
+  This will apply deterministic flags at startup (before models initialize).
+- Verify exact versions of `torch`, `diffusers`, `transformers`, `xformers`, CUDA, and ensure `HY3DGEN_MODELS` points to the same checkpoints. In particular, `torch==2.5.0+cu124`, `cuda==12.4`, `cudnn==90100`, `diffusers==0.35.0`, and `transformers==4.54.0`.
+- **If guidance still diverges**: open a Github issue with your log where you run the method with `export FOHO_SUPPRESS_WARNINGS=0`.
+- **Worst case**: change the seed(s) used in guidance/inpainting; the optimization is sensitive to initialization and different seeds can converge better on some hardware.
+
 
 ## Questions
 For technical questions, please open a GitHub issue in this repo. For other things, please contact [me](https://aidilayce.github.io).
