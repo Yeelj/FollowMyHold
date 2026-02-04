@@ -146,7 +146,7 @@ PYTHONPATH=src python3 -m foho.preprocess.get_hunyuan_input \
   ```
   This will apply deterministic flags at startup (before models initialize).
 - Verify exact versions of `torch`, `diffusers`, `transformers`, `xformers`, CUDA, and ensure `HY3DGEN_MODELS` points to the same checkpoints. In particular, `torch==2.5.0+cu124`, `cuda==12.4`, `cudnn==90100`, `diffusers==0.35.0`, and `transformers==4.54.0`.
-- **If guidance still diverges**: open a Github issue with your log where you run the method with `export FOHO_SUPPRESS_WARNINGS=0`.
+- **If guidance still diverges**: open a Github issue with your log and environment specifics/flags where you run the method with `export FOHO_SUPPRESS_WARNINGS=0`.
 - **Worst case**: change the seed(s) used in guidance/inpainting; the optimization is sensitive to initialization and different seeds can converge better on some hardware.
 
 
