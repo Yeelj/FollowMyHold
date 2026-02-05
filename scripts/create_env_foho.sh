@@ -6,26 +6,26 @@ PY_VER="3.10"
 CONDA_SH="${CONDA_SH:-}"
 FOHO_ROOT="FollowMyHold"
 
-conda create -y -n "${ENV_NAME}" "python=${PY_VER}"
-
 if [[ -z "${CONDA_SH}" ]]; then
   echo "[FOHO] Set CONDA_SH to your conda.sh path before running this script."
   echo "[FOHO] Example: export CONDA_SH=/path/to/miniforge3/etc/profile.d/conda.sh"
   exit 1
 fi
 source "${CONDA_SH}"
+
+conda create -y -n "${ENV_NAME}" "python=${PY_VER}"
 conda activate "${ENV_NAME}"
 
 # # OPTIONAL (RECOMMENDATION): figure the following flags to put checkpoints and cache files in a common place
-# conda env config vars set HF_HOME=/path/to/cache
-# conda env config vars set HF_DATASETS_CACHE=/path/to/cache
-# conda env config vars set HF_HUB_CACHE=/path/to/cache
-# conda env config vars set U2NET_HOME=/path/to/cache
-# conda env config vars set TRANSFORMERS_CACHE=/path/to/cache
-# conda env config vars set TORCH_HOME=/path/to/cache
-# conda env config vars set HUGGINGFACE_HUB_CACHE=/path/to/cache
-# conda env config vars set PIP_CACHE_DIR=/path/to/cache
-# conda env config vars set CONDA_PKGS_DIRS=/path/to/cache
+# FOHO_CACHE="${FOHO_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/foho}"
+# conda env config vars set HF_HOME="$FOHO_CACHE/huggingface"
+# conda env config vars set HF_DATASETS_CACHE="$FOHO_CACHE/huggingface"
+# conda env config vars set HF_HUB_CACHE="$FOHO_CACHE/huggingface/hub"
+# conda env config vars set U2NET_HOME="$FOHO_CACHE/u2net"
+# conda env config vars set TRANSFORMERS_CACHE="$FOHO_CACHE/transformers"
+# conda env config vars set TORCH_HOME="$FOHO_CACHE/torch"
+# conda env config vars set HUGGINGFACE_HUB_CACHE="$FOHO_CACHE/huggingface"
+# conda env config vars set PIP_CACHE_DIR="$FOHO_CACHE/pip"
 # conda deactivate
 # conda activate "${ENV_NAME}"
 
@@ -40,15 +40,22 @@ pip install \
   nvidia-cusparse-cu12==12.3.1.170 \
   nvidia-nvjitlink-cu12==12.4.127
 
-ENV_PREFIX="${ENV_PREFIX:-${CONDA_PREFIX}}"
-export CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
-export PATH=$CUDA_HOME/bin:$PATH
+
+ENV_PREFIX="${ENV_PREFIX:-${CONDA_PREFIX:-}}"
+if [[ -z "${ENV_PREFIX}" ]]; then
+  echo "[FOHO] ENV_PREFIX is empty. Make sure the conda environment is activated."
+  exit 1
+fi
+
+CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
+export PATH="$CUDA_HOME/bin:${PATH}"
+export LD_LIBRARY_PATH="$CUDA_HOME/lib64:${LD_LIBRARY_PATH:-}"
+export CC="${CC:-/usr/bin/gcc}"
+export CXX="${CXX:-/usr/bin/g++}"
 export LD_LIBRARY_PATH=\
 $ENV_PREFIX/lib/python3.10/site-packages/nvidia/nvjitlink/lib:\
 $ENV_PREFIX/lib/python3.10/site-packages/nvidia/cusparse/lib:\
-$CUDA_HOME/lib64:$LD_LIBRARY_PATH
-export CC="${CC:-/usr/bin/gcc}"
-export CXX="${CXX:-/usr/bin/g++}"
+$CUDA_HOME/lib64:${LD_LIBRARY_PATH:-}
 
 pip install \
   accelerate safetensors \
@@ -57,23 +64,26 @@ pip install \
   ultralytics \
   sam2 --no-deps \
   segment-anything --no-deps \
-  hqq \
   git+https://github.com/EasternJournalist/utils3d.git@3913c65d81e05e47b9f367250cf8c0f7462a0900 \
-  detectron2==0.6 \
+  detectron2 \
+  hqq \
   smplx==0.1.28 \
   mmcv==1.3.9 \
   pytorch-lightning==2.6.0 \
-  pyrender timm webdataset pycocotools gdown gradio
+  pyrender timm webdataset pycocotools gdown gradio \
+  "google-ai-generativelanguage>=0.6.0" "pydantic<3" httplib2 google-api-python-client pytz pyyaml \
+  einops freetype-py pyglet braceexpand vtk scooby
+
 
 pip install kaolin==0.17.0 -f https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.0_cu124.html
 
 # building ddshan's hand_object_detector, for details, check https://github.com/ddshan/hand_object_detector
-cd "$FOHO_ROOT/third_party/estimator/hand_object_detector/lib"
+cd "third_party/estimator/hand_object_detector/lib"
 python setup.py build_ext --inplace
+cd ../../..
 
 # building pytorch3d
 pip install --upgrade setuptools wheel
-cd "$FOHO_ROOT/third_party"
 git clone https://github.com/facebookresearch/pytorch3d.git
 cd pytorch3d
 pip install -e . --no-build-isolation
@@ -95,3 +105,5 @@ pip install numpy==1.24.0
 pip install diffusers==0.35.0
 pip install transformers==4.54.0
 pip install huggingface_hub==0.34.3
+
+pip install PyOpenGL PyOpenGL_accelerate
